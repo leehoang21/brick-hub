@@ -13,16 +13,18 @@ class {{name.pascalCase()}}RemoteDataSourceImpl extends {{name.pascalCase()}}Rem
 
   {{name.pascalCase()}}RemoteDataSourceImpl(this.service);
 
-  // @override
-  // Future<BaseResponse> get(Map<String, dynamic> params) {
-  //   return call(
-  //     () {
-  //       return service.get{{name.pascalCase()}}(
-  //         params,
-  //       );
-  //     },
-  //   );
-  // }
+  @override
+  Future<dynamic> getData(Map<String, dynamic> params) {
+     return await call(
+      () async {
+        final token = "Bearer ${AppService().accessToken}";
+
+        final result = await apiService.get{{name.pascalCase()}}(params, token);
+        return process(result);
+      },
+    );
+    
+  }
 
 
 }

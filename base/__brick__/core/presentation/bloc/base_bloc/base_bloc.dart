@@ -6,8 +6,4 @@ abstract class BaseBloc<T> extends Cubit<T> {
   }
 
   void onInit() {}
-
-  void dispose() {
-    close();
-  }
 }

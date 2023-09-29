@@ -1,12 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:idolise/common/constants/app_dimens.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../../../themes/theme_color.dart';
-import '../../../../themes/theme_text.dart';
+import '../../../../common/themes/themes.dart';
 import 'appbar_constants.dart';
 
 class AppBarButton extends StatelessWidget {
@@ -49,66 +48,62 @@ class AppBarButton extends StatelessWidget {
 }
 
 class AppBarWidget extends StatelessWidget implements PreferredSize {
-  final Widget? leading;
-  final Widget? action;
+  final bool isLeading;
+  final VoidCallback? onLeadingTap;
   final String? title;
-  final Widget? centerWidget;
-  final TextStyle? titleStyle;
-  final Color? color;
+  final bool centerTitle;
+  final Widget? trailing;
 
-  const AppBarWidget(
-      {Key? key,
-      this.leading,
-      this.title,
-      this.action,
-      this.centerWidget,
-      this.titleStyle,
-      this.color})
-      : super(key: key);
+  const AppBarWidget({
+    super.key,
+    this.isLeading = true,
+    this.onLeadingTap,
+    this.title,
+    this.centerTitle = true,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
     return Container(
-      height: AppbarConstants.buttonSize,
       margin: EdgeInsets.only(top: top),
-      decoration: BoxDecoration(color: color ?? AppColor.white, boxShadow: [
-        BoxShadow(
-          color: AppColor.black.withOpacity(0.5),
-          spreadRadius: 0,
-          blurRadius: 2,
-          offset: const Offset(0, 1.5),
-        )
-      ]),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          leading ??
-              SizedBox(
-                width: AppbarConstants.buttonSize,
-                height: AppbarConstants.buttonSize,
-                child: Icon(Icons.arrow_back, color: AppColor.black)
-                    .onTap(() => context.router.pop()),
-              ),
-          Expanded(
-            child: centerWidget ??
-                Text(
-                  title ?? '',
-                  maxLines: 1,
-                  style: titleStyle ??
-                      ThemeText.subtitle1.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.black,
-                      ),
-                  textAlign: TextAlign.left,
-                ),
-          ),
-          action != null
-              ? action!
-              : SizedBox(
+      decoration: BoxDecoration(
+          color: Theme.of(context).appBarTheme.backgroundColor,
+          border: const Border(bottom: BorderSide(color: AppColor.grey400))),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (isLeading)
+                SizedBox(
                   width: AppbarConstants.buttonSize,
                   height: AppbarConstants.buttonSize,
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: AppDimens.iconSize,
+                  ).onTap(
+                    onLeadingTap ?? () => context.pop(),
+                  ),
                 ),
+              Expanded(
+                child: Text(
+                  title ?? '',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontFamily: FontFamily.nordiquePro),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              trailing ??
+                  (centerTitle
+                      ? SizedBox(
+                          width: AppbarConstants.buttonSize,
+                          height: AppbarConstants.buttonSize,
+                        )
+                      : const SizedBox()),
+            ],
+          ),
         ],
       ),
     );

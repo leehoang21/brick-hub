@@ -1,12 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:slugify/slugify.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-void logger(Object? message) {
-  log('app_logger: {$message}');
-}
+import '../themes/themes.dart';
 
 bool isNullEmpty(Object? o) => o == null || "" == o || o == "null";
 
@@ -27,23 +25,61 @@ bool isNumeric(dynamic s) {
   return (double.tryParse(sConvert) != null || int.tryParse(sConvert) != null);
 }
 
-bool isInterger(dynamic s) {
-  String sConvert = s.toString();
-  if (isNullEmpty(sConvert)) {
-    return false;
+Future<File?> getFile(FileType fileType) async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: fileType,
+  );
+  if (result != null) {
+    File file = File(result.files.single.path!);
+    return file;
   }
-  return (int.tryParse(sConvert) != null);
+  return null;
 }
 
-String parseColorToString(Color color) {
-  return '0x${color.value.toRadixString(16).substring(0, 8)}';
+String formatDate(String input) {
+  DateTime dateTime = DateTime.parse(input);
+  String formattedDate = "${dateTime.day}/${dateTime.month}/${dateTime.year}";
+  return formattedDate;
 }
 
-Color parseStringToColor(String? color) {
-  final colorInt = int.tryParse(color ?? '');
-  if (colorInt == null) {
-    return Colors.white;
+String addDaysToDateString(String inputDate, int daysToAdd) {
+  DateTime dateTime = DateTime.parse(inputDate).add(Duration(days: daysToAdd));
+  return dateTime.toString();
+}
+
+int expiredDays(String inputDate) {
+  DateTime dateTime = DateTime.parse(inputDate);
+  final difference = dateTime.difference(DateTime.now()).inDays;
+  return difference;
+}
+
+class AppUtils {
+  static void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 2,
+      backgroundColor: AppColor.grey400.withOpacity(0.5),
+      textColor: AppColor.textColor,
+    );
   }
-  final result = Color(colorInt);
-  return result;
+}
+
+bool isEmptyAll(Object? o) =>
+    o == null ||
+    false == o ||
+    "" == o ||
+    "null" == o ||
+    ((o is num) ? o > 0 : false);
+
+void logger(Object? ob) {
+  log(ob.toString());
+}
+
+bool checkRemote(String path) {
+  if (path.contains('http://') || path.contains('https://')) {
+    return true;
+  }
+  return false;
 }

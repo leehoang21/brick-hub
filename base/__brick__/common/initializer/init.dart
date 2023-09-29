@@ -1,14 +1,18 @@
-//fvm flutter packages pub run build_runner build --delete-conflicting-outputs
-//fvm flutter packages pub run build_runner watch --delete-conflicting-outputs
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:photo_manager/photo_manager.dart';
 
+import '../../core/presentation/bloc/bloc_observer.dart';
 import '../di/di.dart';
-import '../service/app_service.dart';
+import '../utils/utils_src.dart';
 
 class AppInitializer {
   static Future<void> init() async {
     configureDependencies();
     await GetStorage.init();
-    getIt.get<AppService>().onInit();
+    Bloc.observer = MyBlocObserver();
   }
 }

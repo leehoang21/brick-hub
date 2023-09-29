@@ -24,14 +24,13 @@ class RefreshWidget extends StatelessWidget {
     return SmartRefresher(
       enablePullDown: true,
       enablePullUp: enableLoadMore,
-      controller: controller ?? RefreshController(),
+      controller: controller!,
       onRefresh: onRefresh,
       onLoading: onLoadMore,
       header: const MaterialClassicHeader(),
       footer: CustomFooter(
         onClick: onLoadMore,
         builder: (context, mode) {
-          if (footer == null) return const SizedBox.shrink();
           if (mode == LoadStatus.loading) {
             return footer!;
           }

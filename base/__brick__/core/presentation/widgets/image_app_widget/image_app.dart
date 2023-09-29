@@ -2,18 +2,21 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_eglife_ecommerce_admin/common/utils/app_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../themes/themes.dart';
+import '../../../../common/themes/themes.dart';
+import '../../../../common/utils/utils_src.dart';
 
 // ignore: must_be_immutable
 class ImageAppWidget extends StatelessWidget {
   final String? path;
   bool isRemote = false;
-  Widget? placeholder;
-  Widget? errorWidget;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final Widget? nullPathWidget;
+  final Image? defultImage;
   final BoxFit fit;
   final double? width;
   final double? height;
@@ -28,13 +31,22 @@ class ImageAppWidget extends StatelessWidget {
     this.width,
     this.height,
     this.color,
+    this.nullPathWidget,
+    this.defultImage,
   }) : super(key: key);
 
   Widget get _placeholder {
+    late double size;
+    if (width != null && height != null) {
+      size = width! > height! ? height! : width!;
+      size = size / 2;
+    } else {
+      size = 6;
+    }
     return Center(
         child: SizedBox(
-      width: width ?? 6,
-      height: height ?? 6,
+      width: size,
+      height: size,
       child: const CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(AppColor.primaryColor),
         strokeWidth: 2,
@@ -52,7 +64,14 @@ class ImageAppWidget extends StatelessWidget {
 
   Widget _buildLottieImageWidget() {
     if (isRemote) {
-      return image(NetworkImage(path!));
+      return CachedNetworkImage(
+          imageUrl: path!,
+          fit: fit,
+          width: width,
+          height: height,
+          color: color,
+          placeholder: (context, url) => placeholder ?? _placeholder,
+          errorWidget: (context, url, error) => errorWidget ?? _errorWidget);
     }
 
     return image(FileImage(File(path!)));
@@ -87,11 +106,28 @@ class ImageAppWidget extends StatelessWidget {
     return image(AssetImage(path!));
   }
 
-  ImageProvider get getImage {
+  ImageProvider? get getImage {
+    if (isNullEmpty(path)) {
+      if (!isNullEmpty(defultImage)) {
+        return defultImage!.image;
+      }
+      return null;
+    }
+
     if (checkRemote()) {
       return NetworkImage(path!);
+    } else if (checkAsset()) {
+      return AssetImage(path!);
     }
-    return AssetImage(path!);
+    return FileImage(File(path!));
+  }
+
+  bool checkAsset() {
+    if (path!.contains('assets')) {
+      String firstString = path!.trim().substring(0, 5).toUpperCase();
+      return firstString.contains('asset'.toUpperCase());
+    }
+    return false;
   }
 
   Image image(ImageProvider<Object> image) => Image(
@@ -111,9 +147,18 @@ class ImageAppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: _buildImage(),
+    );
+  }
+
+  Widget _buildImage() {
     isRemote = checkRemote();
     if (isNullEmpty(path)) {
-      return _nullPathWidget;
+      return nullPathWidget ??
+          (getImage == null ? _nullPathWidget : image(getImage!));
     }
     switch (imageType) {
       case ImageType.file:

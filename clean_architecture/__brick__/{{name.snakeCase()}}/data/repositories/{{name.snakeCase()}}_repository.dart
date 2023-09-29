@@ -14,17 +14,19 @@ import '../mapper/{{name.snakeCase()}}_mapper.dart';
 @Injectable(as: {{name.pascalCase()}}Repository)
 class {{name.pascalCase()}}RepositoryImpl extends {{name.pascalCase()}}Repository with Repository {
   final {{name.pascalCase()}}RemoteDataSource remoteDataSource;
-  final {{name.pascalCase()}}LocalDataSource localDataSource;
+ // final {{name.pascalCase()}}LocalDataSource localDataSource;
 
-  {{name.pascalCase()}}RepositoryImpl(this.remoteDataSource, this.localDataSource);
-  // @override
-  // Future<Either<dynamic, String>> delete({required int id}) {
-  //   return call(
-  //     call: () async {
-  //       final result = await remoteDataSource.delete(id);
-  //       return result.data;
-  //     },
-  //   );
-  // }
+  {{name.pascalCase()}}RepositoryImpl(this.remoteDataSource
+  //, this.localDataSource
+  );
+
+  @override
+  Future<Either<dynamic, String>> getData()async {
+     return call(() async {
+      final result = await _loginRemoteDataSource.getData();
+      return {{name.pascalCase()}}Mapper.convert({{name.pascalCase()}}Model.fromJson(result));
+    });
+
+  }
 
 }

@@ -14,14 +14,15 @@ fvm flutter pub add pull_to_refresh
 fvm flutter pub add flutter_screenutil
 fvm flutter pub add flutter_bloc
 fvm flutter pub add freezed_annotation
+fvm flutter pub add retrofit_generator
+fvm flutter pub add nb_utils
+fvm flutter pub add shimmer
 
 fvm flutter pub add injectable_generator  --dev
 fvm flutter pub add build_runner --dev
 fvm flutter pub add auto_route_generator  --dev
 fvm flutter pub add json_serializable --dev
 fvm flutter pub add freezed --dev
-
-#yaml
-  flutter_localizations:
-    sdk: flutter
-  intl : 
+fvm flutter pub add flutter_launcher_icons --dev
+fvm flutter pub add flutter_gen_runner --dev
+fvm flutter pub add flutter_lints --dev

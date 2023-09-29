@@ -12,7 +12,7 @@ class {{name.pascalCase()}}UseCase {
 
   {{name.pascalCase()}}UseCase(this._repository);
 
-  // Future<Either<dynamic, String>> save({{name.pascalCase()}}Entity data, int? id) {
-  //   return repository.save(data, id);
-  // }
+  Future<Either<dynamic, String>> getData() {
+    return repository.getData();
+  }
 }
