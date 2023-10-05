@@ -5,12 +5,12 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../common/mixins/bloc_mixin.dart';
 part '{{name.snakeCase()}}_state.dart';
-part '{{name.snakeCase()}}.freezed.dart';
+part '{{name.snakeCase()}}_cubit.freezed.dart';
 
 
 @injectable
 class {{name.pascalCase()}}Cubit extends BaseBloc<{{name.pascalCase()}}State> with BlocMixin {
-  {{name.pascalCase()}}Cubit(this._useCase) : super(const {{name.pascalCase()}}State.loading());
+  {{name.pascalCase()}}Cubit(this._useCase) : super(const {{name.pascalCase()}}State.initial());
   final {{name.pascalCase()}}UseCase _useCase;
 
   @override
