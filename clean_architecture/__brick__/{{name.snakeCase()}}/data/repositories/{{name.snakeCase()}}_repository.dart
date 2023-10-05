@@ -20,13 +20,13 @@ class {{name.pascalCase()}}RepositoryImpl extends {{name.pascalCase()}}Repositor
   //, this.localDataSource
   );
 
-  @override
-  Future<Either<dynamic, String>> getData()async {
-     return call(() async {
-      final result = await _loginRemoteDataSource.getData();
-      return {{name.pascalCase()}}Mapper.convert({{name.pascalCase()}}Model.fromJson(result));
-    });
+  // @override
+  // Future<Either<dynamic, String>> getData()async {
+  //    return call(() async {
+  //     final result = await _loginRemoteDataSource.getData();
+  //     return {{name.pascalCase()}}Mapper.convert({{name.pascalCase()}}Model.fromJson(result));
+  //   });
 
-  }
+  // }
 
 }

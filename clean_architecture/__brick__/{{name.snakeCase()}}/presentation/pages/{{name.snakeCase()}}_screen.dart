@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, use_build_context_synchronously
-part of '{{name.snakeCase()}}_page_provider.dart';
+part of '{{name.snakeCase()}}_provider.dart';
 
 
 class {{name.pascalCase()}}Screen extends StatelessWidget {

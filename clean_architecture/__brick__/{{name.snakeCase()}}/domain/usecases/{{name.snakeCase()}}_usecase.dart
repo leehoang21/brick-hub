@@ -10,9 +10,9 @@ import '../repositories/{{name.snakeCase()}}_repository.dart';
 class {{name.pascalCase()}}UseCase {
   final {{name.pascalCase()}}Repository repository;
 
-  {{name.pascalCase()}}UseCase(this._repository);
+  {{name.pascalCase()}}UseCase(this.repository);
 
-  Future<Either<dynamic, String>> getData() {
-    return repository.getData();
-  }
+  // Future<Either<dynamic, String>> getData() {
+  //   return repository.getData();
+  // }
 }
