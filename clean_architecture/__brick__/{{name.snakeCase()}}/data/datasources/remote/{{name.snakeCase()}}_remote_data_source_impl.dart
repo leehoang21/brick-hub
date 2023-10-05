@@ -19,7 +19,7 @@ class {{name.pascalCase()}}RemoteDataSourceImpl extends {{name.pascalCase()}}Rem
       () async {
         final token = "Bearer ${AppService().accessToken}";
 
-        final result = await apiService.get{{name.pascalCase()}}(params, token);
+        final result = await service.get{{name.pascalCase()}}(params, token);
         return process(result);
       },
     );
